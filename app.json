@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "skinmarket",
+    "name": "SkinMarket",
     "slug": "skinmarket",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "skinmarket",
+    "scheme": "steamapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

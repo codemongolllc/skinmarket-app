@@ -1,98 +1,119 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Header, ItemCard } from "@/components";
+import { useTheme } from "@/hooks/useTheme";
+import React from "react";
+import {
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Profile() {
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      paddingTop: 30,
+      paddingHorizontal: 4,
+    },
+    itemContainer: {
+      borderRadius: 10,
+      backgroundColor: "white",
+      marginBottom: 10,
+    },
+    content: {},
+  });
 
-export default function HomeScreen() {
+  const DATA = [
+    {
+      id: "1",
+      price: "₮ 1,500,000",
+      discount: "-19%",
+      title: "USP-S | Ticket to Hell",
+      condition: "Factory New * Convert Knife",
+      progress: 0.12694,
+      image: require("@/assets/images/icon.png"),
+    },
+    {
+      id: "2",
+      price: "₮ 950,000",
+      discount: "-10%",
+      title: "AK-47 | Redline",
+      condition: "Field-Tested * Rifle",
+      progress: 0.24567,
+      image: require("@/assets/images/icon.png"),
+    },
+    {
+      id: "3",
+      price: "₮ 2,300,000",
+      discount: "-25%",
+      title: "AWP | Dragon Lore",
+      condition: "Factory New * Sniper",
+      progress: 0.05678,
+      image: require("@/assets/images/icon.png"),
+    },
+    {
+      id: "4",
+      price: "₮ 600,000",
+      discount: "-5%",
+      title: "Desert Eagle | Blaze",
+      condition: "Minimal Wear * Pistol",
+      progress: 0.33455,
+      image: require("@/assets/images/icon.png"),
+    },
+    {
+      id: "5",
+      price: "₮ 1,100,000",
+      discount: "-15%",
+      title: "M4A1-S | Hyper Beast",
+      condition: "Field-Tested * Rifle",
+      progress: 0.19876,
+      image: require("@/assets/images/icon.png"),
+    },
+    {
+      id: "6",
+      price: "₮ 850,000",
+      discount: "-12%",
+      title: "Glock-18 | Fade",
+      condition: "Factory New * Pistol",
+      progress: 0.11234,
+      image: require("@/assets/images/icon.png"),
+    },
+  ];
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Header type="home" title="МИНИЙ ITEM" />
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={DATA}
+            renderItem={({ item }) => (
+              <ItemCard
+                price={item.price}
+                discount={item.discount}
+                title={item.title}
+                condition={item.condition}
+                image={require("@/assets/images/icon.png")}
+                progress={item.progress}
               />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+            )}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            columnWrapperStyle={{
+              justifyContent: "space-between",
+              marginBottom: 10,
+            }}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
