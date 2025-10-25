@@ -32,7 +32,7 @@ const SteamLoginPrompt: React.FC<SteamLoginPromptProps> = ({
       case true:
         return (
           <WebView
-            source={{ uri: "http://192.168.1.2:3000/auth/steam" }} // backend server IP
+            source={{ uri: "http://192.168.1.2:3000/auth/steam" }}
             originWhitelist={["*"]}
             javaScriptEnabled={true} // Steam login JS хэрэгтэй
             domStorageEnabled={true} // cookie хадгалах

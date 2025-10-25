@@ -1,106 +1,102 @@
-import { IText } from "@/components";
+import { Badge, FloatContainer, IText } from "@/components";
+import { useGlobal } from "@/context/GlobalContext";
 import { useTheme } from "@/hooks/useTheme";
-import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import { formatMoney } from "@/utils";
+import React, { useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 
 interface ItemCardProps {
-  price: string;
-  discount?: string;
-  title: string;
-  condition?: string;
-  image: any;
-  progress?: number;
+  item?: any;
 }
 
-const ItemCard: React.FC<ItemCardProps> = ({
-  price,
-  discount,
-  title,
-  condition,
-  image,
-  progress = 1,
-}) => {
+const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const { colors } = useTheme();
+  const { user } = useGlobal();
+
+  const [floatValue, setFloatValue] = useState(0.08);
+
+  async function handleDetail() {
+    try {
+      const res = await fetch(
+        `http://192.168.1.2:3000/api/inventory/detail?classid=${item?.classid}&instanceid=${item?.instanceid}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+      if (!res.ok) {
+        console.warn("Server error:", res.status);
+        return;
+      }
+      const data = await res.json();
+      console.log("Item detail:", data.item);
+    } catch (err) {
+      console.error("Error fetching item detail:", err);
+    }
+  }
 
   return (
     <TouchableOpacity
       style={{
         width: "49%",
-        height: 250,
         backgroundColor: colors.strokePrimarySoft,
         borderRadius: 12,
-        // borderColor: colors.primarySoft,
-        // borderWidth: 1,
+        borderColor: colors.primarySoft,
+        borderWidth: 1,
+        justifyContent: "space-between",
+        paddingBottom: 10,
       }}
+      disabled={!item?.tradable}
+      onPress={handleDetail}
     >
+      <Badge title="29%" type="error" />
       <View
         style={{
-          height: 100,
+          height: 130,
           width: "100%",
           borderTopStartRadius: 12,
           borderTopEndRadius: 12,
           paddingVertical: 10,
           alignItems: "center",
+          marginTop: 24,
         }}
       >
         <Image
-          source={{ uri: image }}
+          source={{ uri: item?.icon }}
           style={{ height: "100%", width: "100%" }}
           resizeMode="contain"
         />
       </View>
-
       <View style={{ paddingHorizontal: 10 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <IText color={colors.white} fonts="bold" size={20}>
-            {price}
+          <IText color={colors.white} fonts="bold" size={16}>
+            {formatMoney(item?.price)}
           </IText>
-          {discount && (
-            <LinearGradient
-              colors={["#fdbb2d", "#b21f1f", "#1a2a6c"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{
-                paddingHorizontal: 4,
-                borderRadius: 4,
-                justifyContent: "center",
-                height: 18,
-                alignSelf: "center",
-                marginLeft: 10,
-              }}
-            >
-              <IText color={colors.white} fonts="bold" size={10}>
-                {discount}
-              </IText>
-            </LinearGradient>
-          )}
         </View>
-        <IText color={colors.white} fonts="bold" size={14}>
-          {title}
+        <IText color={colors.white} fonts="light" size={12}>
+          {item?.name}
         </IText>
       </View>
-
-      {condition && (
-        <View style={{ paddingHorizontal: 10, marginTop: 10 }}>
-          <IText color={"#686B6B"} fonts="regular" size={12}>
-            {condition}
+      {item?.type && (
+        <View style={{ paddingHorizontal: 10, marginTop: 10, flex: 1 }}>
+          <IText color={"#686B6B"} fonts="regular" size={14}>
+            {item?.type}
           </IText>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <IText color={colors.white} fonts="regular" size={10}>
-              {progress.toFixed(5)}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 4,
+            }}
+          >
+            <IText color={colors.white} fonts="regular" size={12}>
+              FN /
             </IText>
-            <View
-              style={{
-                width: "70%",
-                height: 4,
-                backgroundColor: "green",
-                marginLeft: 5,
-                borderEndEndRadius: 2,
-                borderStartEndRadius: 2,
-              }}
-            />
+            <IText color={colors.white} fonts="regular" size={12}>
+              {" "}
+              {floatValue}
+            </IText>
           </View>
+          <FloatContainer floatValue={floatValue} />
         </View>
       )}
     </TouchableOpacity>

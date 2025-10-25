@@ -11,13 +11,13 @@ const tintColorDark = "#fff";
 export const Colors = {
   light: {
     colors: {
-      background: "#131417",
+      background: "#121212",
       primary: "#539DF3",
       steamColor: "#1671d9ff",
-      secondary: "#1D1F24",
+      secondary: "#1E1E1E",
       white: "#FFFFFF",
       strokeSecondarySoft: "#676D75",
-      strokePrimarySoft: "#26292A",
+      strokePrimarySoft: "#232323",
       error: "#FF4D4F",
       warning: "#FFA500",
       success: "#52C41A",

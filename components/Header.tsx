@@ -3,7 +3,6 @@ import { IconLib, IText } from "@/components";
 import { useGlobal } from "@/context/GlobalContext";
 import { useTheme } from "@/hooks/useTheme";
 import { useRouter } from "expo-router";
-import { Notification } from "iconsax-react-native";
 import React, { useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -12,6 +11,7 @@ type HeaderProps = {
   showBack?: boolean;
   type?: any;
   end?: any;
+  onBackPress?: any;
 };
 
 export default function Header({
@@ -19,6 +19,7 @@ export default function Header({
   showBack = false,
   type,
   end,
+  onBackPress,
 }: HeaderProps) {
   const { user, theme, setTheme } = useGlobal();
   const router = useRouter();
@@ -38,25 +39,90 @@ export default function Header({
 
   function renderHeader() {
     switch (type) {
+      case "home":
+        return (
+          <>
+            <View
+              style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
+            >
+              <TouchableOpacity
+                style={{ height: 30, width: 30, borderRadius: 10 }}
+                onPress={() => {
+                  setGameType(gameType === "cs" ? "dota" : "cs");
+                }}
+              >
+                {gameType ? (
+                  <Image
+                    source={require("@/assets/images/csIcon.png")}
+                    style={{ width: "100%", height: "100%", borderRadius: 2 }}
+                  />
+                ) : (
+                  <Image
+                    source={require("@/assets/images/dotaIcon.png")}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                )}
+              </TouchableOpacity>
+              <IText fonts="bold" size={18} color={colors.white}>
+                {title}
+              </IText>
+            </View>
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <IconLib
+                name="ShoppingCart"
+                variant="Outline"
+                color={colors.white}
+              />
+              <IconLib
+                name="SearchNormal1"
+                variant="Outline"
+                color={colors.white}
+              />
+            </View>
+          </>
+        );
       case "profile":
         return (
           <>
-            <View style={{ flexDirection: "column" }}>
-              <IText style={{ fontSize: 18 }} fonts="bold">
-                Сайн байна уу,
-              </IText>
-              <IText style={{ fontSize: 24 }} fonts="bold">
-                {user?.username || "___"}
-              </IText>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                setTheme(theme === "dark" ? "light" : "dark");
-              }}
-              style={styles.back}
+            <IText
+              style={{ fontSize: 18, textAlign: "center" }}
+              fonts="bold"
+              color={colors.white}
             >
-              <Notification size="24" color={colors.dark} />
+              {title || "___"}
+            </IText>
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <IconLib
+                name="ShoppingCart"
+                variant="Outline"
+                color={colors.white}
+              />
+            </View>
+          </>
+        );
+      case "login":
+        return (
+          <>
+            <TouchableOpacity
+              style={{ flexDirection: "row", gap: 10 }}
+              onPress={onBackPress}
+            >
+              <IconLib
+                name="ArrowLeft"
+                variant="Outline"
+                color={colors.white}
+              />
             </TouchableOpacity>
+            <IText
+              style={{ fontSize: 18, textAlign: "center" }}
+              fonts="bold"
+              color={colors.white}
+            >
+              {title || "___"}
+            </IText>
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <IconLib name="Refresh" variant="Outline" color={colors.white} />
+            </View>
           </>
         );
       default:
